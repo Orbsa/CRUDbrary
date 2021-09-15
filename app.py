@@ -17,15 +17,14 @@ def index():
 
 @app.route('/test')
 def test_repeater():
+    load = request.get_json()
     payload = {
-            'q':"Harry Potter",
+            'q': load['q'],
             'maxResults': "7"
             }
     r = requests.get('https://www.googleapis.com/books/v1/volumes', params = payload)
     js = r.json()
-    titles = []
-    for book in js['items']:
-        titles.append(book["volumeInfo"]["title"])
+    titles = [book['volumeInfo']['title'] for book in js['items']]
     return make_response(jsonify(titles), 200)
 
 @app.route('/api/v1/books', methods=['GET'])
