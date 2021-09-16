@@ -19,8 +19,6 @@ def get_db():
 # Make queries AND return results
 def query_db(query, args=(), one=False):
     db = get_db()
-    print('query:',query)
-    print('args:',args)
     cur = db.execute(query, args)
     rv = cur.fetchall()
     db.commit()

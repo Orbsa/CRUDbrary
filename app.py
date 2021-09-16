@@ -48,7 +48,9 @@ def update_book():
     if not any([param in args for param in reqParams]):
         return make_response("any of [title, author, isbn] required json body parameters for this request",400)
     book = BC.update(args)
-    return jsonify(book)
+    print(book)
+    if not book: abort(404)
+    return jsonify(BC.get(args))
 
 @app.route('/api/v1/book', methods=['DELETE'])
 def delete_book():
@@ -79,6 +81,6 @@ def load_books():
 
 @app.route('/init')
 def init_db():
-    BC.clear_table()
+    BC.create_table()
     load_books()
     return make_response('Success!', 200)

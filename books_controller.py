@@ -10,9 +10,7 @@ def create_table(): # It may be more appropriate to use a schema sql file..
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 title TEXT NOT NULL,
                 author TEXT NOT NULL,
-                isbn TEXT NOT NULL,
-                rented TEXT,
-                available INT
+                isbn TEXT NOT NULL
             )
             """
     db = get_db()
@@ -20,11 +18,6 @@ def create_table(): # It may be more appropriate to use a schema sql file..
     c.execute(table)
     c.close()
     return True
-
-def clear_table():
-    db = get_db()
-    query_db('DROP TABLE books') # Out with the old
-    create_table() # In with the new
 
 def get(book):
     statement = "SELECT * FROM books WHERE id = ?"
@@ -40,9 +33,11 @@ def insert(book):
 
 def update(updated_keys):
     book = get(updated_keys)
+    if not book: return False
     for key in updated_keys: book[key] = updated_keys[key]
     statement = "UPDATE books SET title=?, author=?, isbn=? WHERE id = ?"
-    return query_db(statement, [book['title'], book['author'], book['isbn'], book['id']], one = True)
+    query_db(statement, [book['title'], book['author'], book['isbn'], book['id']], one = True)
+    return True
 
 def delete(book):
     statement = "DELETE FROM books WHERE id = ?"
